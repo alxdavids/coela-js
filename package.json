@@ -16,6 +16,9 @@
   "homepage": "https://alxdavids.xyz",
   "dependencies": {
     "eslint": "^4.7.0",
-    "rye": "0.0.3"
+    "gaussian": "^1.1.0",
+    "mathjs": "^3.16.3",
+    "rye": "0.0.3",
+    "sjcl": "^1.0.7"
   }
 }
