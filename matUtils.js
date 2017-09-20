@@ -9,8 +9,13 @@ const methods = {
      * @param {Matrix | Array} matrix
      * @return {Integer} size
      */
-    colSize: function(matrix) {
-        return math.size(matrix).valueOf()[0];
+    rowSize: function(matrix) {
+        let matrixSize = math.size(matrix).valueOf();
+        if (!matrixSize[1]) {
+            return 1;
+        } else {
+            return math.size(matrix).valueOf()[0];
+        }
     },
 
     /**
@@ -18,8 +23,13 @@ const methods = {
      * @param {Matrix | Array} matrix
      * @return {Integer} size
      */
-    rowSize: function(matrix) {
-        return math.size(matrix).valueOf()[1];
+    colSize: function(matrix) {
+        let matrixSize = math.size(matrix).valueOf();
+        if (!matrixSize[1]) {
+            return matrixSize[0];
+        } else {
+            return math.size(matrix).valueOf()[1];
+        }
     },
 
     /**
@@ -40,8 +50,14 @@ const methods = {
     * @return {Matrix | Array} Returns the column as a vector
     */
     getCol: function(matrix, index) {
-        let cols = colSize(matrix);
-        return math.flatten(math.subset(matrix, math.index(math.range(0,cols), index)));
+        let rows = rowSize(matrix);
+        if (index == 0 && methods.colSize(matrix) == 1) {
+            return math.flatten(matrix.valueOf());
+        } else if (methods.colSize(matrix) == 1) {
+            throw new Error("Index is non-zero but number of cols is 1");
+        } else {
+            return math.flatten(math.subset(matrix, math.index(math.range(0,rows), index)));
+        }
     },
 
     /**
@@ -51,8 +67,14 @@ const methods = {
     * @return {Matrix | Array} Returns the row as a vector
     */
     getRow: function(matrix, index) {
-        let rows = methods.rowSize(matrix);
-        return math.flatten(math.subset(matrix, math.index(index, math.range(0,rows))));
+        let cols = methods.colSize(matrix);
+        if (index == 0 && methods.rowSize(matrix) == 1) {
+            return math.flatten(matrix.valueOf());
+        } else if (methods.rowSize(matrix) == 1) {
+            throw new Error("Index is non-zero but number of rows is 1");
+        } else {
+            return math.flatten(math.subset(matrix, math.index(index, math.range(0,cols))));
+        }
     },
 
     /**
@@ -88,7 +110,7 @@ const methods = {
      * @return {Matrix | Array} M = [m1|m2]
      */
     augment: function(m1,m2) {
-        let newRows = []
+        let newRows = [];
         m1.valueOf().forEach(function(row,index) {
             row = row.concat(methods.getRow(m2,index).valueOf());
             newRows.push(row);

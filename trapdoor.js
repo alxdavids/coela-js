@@ -14,7 +14,7 @@ class TrapSampler {
         this.l = math.ceil(math.log(q,2));
         this.ZZq = new PrimeField(q);
         this.dist = new DiscreteGaussian(0,sigma);
-        this.g = tsUtils.getGadgetVector(this.l)
+        this.g = tsUtils.getGadgetVector(this.l);
         this.G = tsUtils.getGadget(this.g,this.n);
         this.zMap = tsUtils.createBuckets(this.q,this.l,this.g,this.dist,null);
         this.elen = this.m + this.n*this.l
@@ -26,11 +26,9 @@ class TrapSampler {
      * @return {Array} [AA,RR]
      */
     genMatrixWithTrapdoor() {
-        let A = math.mod(math.random([this.n,this.m]), this.q);
+        let A = math.mod(math.randomInt([this.n,this.m], this.q), this.q);
         let R = matUtils.genShortMatrix(this.m,this.trapWidth,this.dist);
-        // console.log(math.multiply(A,R).valueOf());
-        console.log(this.G.valueOf());
-        let A1 = tsUtils.balance(math.mod(math.subtract(this.G, math.multiply(A,R)),this.q));
+        let A1 = tsUtils.balance(math.subtract(this.G, math.multiply(A,R)),this.q);
         let IR = math.eye(this.trapWidth);
         let AA = matUtils.augment(A,A1);
         let RR = matUtils.stack(R,IR);
@@ -46,7 +44,7 @@ class TrapSampler {
      * @return {Vector} x
      */
     vecPreImage(AA,RR,u) {
-        let pArr = []
+        let pArr = [];
         for (let i=0;i<this.elen;i++) {
             pArr.push(this.dist.sample);
         }   
@@ -104,9 +102,6 @@ class DiscreteGaussian {
     }   
 }
 
-let m1 = math.matrix([[1,4,-3],[2,3,-4]]);
-let m2 = math.matrix([[0,-2,-7],[5,0,0]]);
 const ts = new TrapSampler(143,4,3,2);
-// mats = ts.genMatrixWithTrapdoor();
-// console.log(math.mod(math.multiply(mats[0],mats[1])),ts.q);
-console.log(matUtils.tensorProduct(math.eye(4), m1));
+mats = ts.genMatrixWithTrapdoor();
+console.log(math.mod(math.multiply(mats[0],mats[1]),ts.q));
