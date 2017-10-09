@@ -5,6 +5,16 @@ const math = require('mathjs');
 const matUtils = require('./matUtils.js');
 
 const methods = {
+    matBalance: function(X,q) {
+        let newX = [];
+        X.forEach(function (value, index) {
+            let rowIndex = math.subset(index, math.index(0));
+            let colIndex = math.subset(index, math.index(1));
+            X.subset(math.index(rowIndex, colIndex), methods.balance(value,q));
+        });
+        return X;
+    },
+
     /**
      * Writes the value x mod q into the 
      * the bounds -q/2 < x < q/2
@@ -13,6 +23,9 @@ const methods = {
      * @return {Number} xq
      */
     balance: function(x,q) {
+        if (!q) {
+            throw new Error("bad error");
+        }
         let xq = math.mod(x,q);
         if (xq > math.floor(q/2)) {
             xq = xq - q;

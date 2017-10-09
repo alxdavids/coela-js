@@ -15,9 +15,11 @@
   "license": "ISC",
   "homepage": "https://alxdavids.xyz",
   "dependencies": {
+    "chai": "^4.1.2",
     "eslint": "^4.7.0",
     "gaussian": "^1.1.0",
     "mathjs": "^3.16.3",
+    "mocha": "^3.5.3",
     "rye": "0.0.3",
     "sjcl": "^1.0.7"
   }
