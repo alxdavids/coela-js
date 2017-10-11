@@ -1,3 +1,8 @@
+/**
+ * Trapdoor javascript file for instantiating different sampling methods
+ */
+
+'use strict';
 const rye = require('rye');
 const math = require('mathjs');
 const gaussian = require('gaussian');
@@ -5,20 +10,8 @@ const sjcl = require('sjcl');
 const tsUtils = require('./trapSamplerUtils.js');
 const matUtils = require('./matUtils.js');
 const ringUtils = require('./ringUtils.js');
+const Polynomial = require('./poly.js');
 const PrimeField = rye.PrimeField;
-const PolynomRing = rye.PolynomRing;
-const FactorRing = rye.FactorRing;
-
-class RingSampler {
-    constructor(q, n, m, sigma) {
-        this.q = q;
-        this.deg = n;
-        this.m = m;
-        this.l = math.ceil(math.log(q, 2));
-        this.ZZq = new PrimeField(q);
-        this.Ring = ringUtils.initFactorRing(this.ZZq, this.deg);
-    }
-}
 
 class TrapSampler {
     constructor(q, n, m, sigma) {
@@ -138,6 +131,8 @@ class DiscreteGaussian {
     }
 }
 
-const rs = new RingSampler(7, 4, 3, 2);
-let Ring = rs.Ring;
-console.log(Ring.polynom([3,0,4]));
+let poly = new Polynomial([1,-8,7,3,1,0,0,-4],2);
+let poly2 = new Polynomial([-4,3,2,1],2);
+let newPoly = poly.add(poly2);
+console.log(newPoly);
+console.log(newPoly.applyQuotient());

@@ -1,8 +1,9 @@
 /**
  * Ring utility functions
  */
+
+ 'use strict';
 const rye = require("rye");
-const PrimeField = rye.PrimeField;
 const PolynomRing = rye.PolynomRing;
 const FactorRing = rye.FactorRing;
 
@@ -10,8 +11,8 @@ const methods = {
     initFactorRing: function(field, dim) {
         let PR = new PolynomRing(field);
         let quotient = methods.getQuotient(dim);
-        // let FR = new FactorRing(PR, PR.polynom(quotient));
-        // return FR;
+        let FR = new FactorRing(PR, PR.polynom(quotient));
+        return FR;
     },
 
     getQuotient: function(dim) {

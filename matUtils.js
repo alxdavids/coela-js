@@ -1,8 +1,9 @@
 /*
  * Matrix utility functions
  */
-const math = require('mathjs');
 
+'use strict';
+const math = require('mathjs');
 const methods = {
     /**
      * Get the col size of the matrix
