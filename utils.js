@@ -1,4 +1,6 @@
-'no strict';
+/*jshint esversion: 6 */
+/*jshint node: true */
+'use strict';
 const math = require('mathjs');
 
 const methods = {
@@ -17,7 +19,7 @@ const methods = {
         if (xq > math.floor(q/2)) {
             xq = xq - q;
         }
-        return xq
+        return xq;
     },
-}
+};
 module.exports = methods;

@@ -2,6 +2,8 @@
  * Trapdoor sampler utils
  */
 
+/*jshint esversion: 6 */
+/*jshint node: true */
 'use strict';
 const math = require('mathjs');
 const matUtils = require('./matUtils.js');
@@ -28,7 +30,7 @@ const methods = {
         for (let i=0; i<l; i++) {
             arr.push(math.pow(2,i));
         }
-        return matUtils.wrapVector(arr)
+        return matUtils.wrapVector(arr);
     },
 
     /**
@@ -54,12 +56,12 @@ const methods = {
             zMap = new Map();
         }
         for (let i=0; i<q*l; i++) {
-            zVals = [];
+            let zVals = [];
             for (let j=0; j<l; j++) {
                 zVals.push(dist.sample);
             }
-            z = matUtils.wrapVector(zVals);
-            zq = math.mod(math.multiply(g,z),q);
+            let z = matUtils.wrapVector(zVals);
+            let zq = math.mod(math.multiply(g,z),q);
             if (!zMap[zq]) {
                 zMap[zq] = [];
             }
@@ -68,5 +70,4 @@ const methods = {
         return zMap;
     },
 };
-
 module.exports = methods;

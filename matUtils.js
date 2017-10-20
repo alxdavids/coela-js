@@ -2,6 +2,8 @@
  * Matrix utility functions
  */
 
+/*jshint esversion: 6 */
+/*jshint node: true */
 'use strict';
 const math = require('mathjs');
 const methods = {
@@ -39,7 +41,7 @@ const methods = {
      * @return {Matrix | Array} Returns the array as a 1D vector
      */
     wrapVector: function(arr) {
-        mat = [];
+        let mat = [];
         mat.push(arr);
         return math.matrix(arr);
     },
@@ -51,7 +53,7 @@ const methods = {
     * @return {Matrix | Array} Returns the column as a vector
     */
     getCol: function(matrix, index) {
-        let rows = rowSize(matrix);
+        let rows = methods.rowSize(matrix);
         if (index == 0 && methods.colSize(matrix) == 1) {
             return math.flatten(matrix.valueOf());
         } else if (methods.colSize(matrix) == 1) {
@@ -90,15 +92,15 @@ const methods = {
         let m1Arr = m1.valueOf();
         m1Arr.forEach(function(row,index){
             let matRow = [];
-            row.forEach(function(entry,index) {
+            row.forEach(function(entry) {
                 matRow.push(math.multiply(entry,m2));
             });
-            for (let k=0; k<m2RowSize; k++) {
-                let row = [];
-                matRow.forEach(function(matrix,index) {
-                    row = row.concat(methods.getRow(matrix,k).valueOf());
-                });
-                mTensor.push(row);
+            for (let i=0; i<m2RowSize; i++) {
+                let newRow = [];
+                for (let j=0; j<matRow.length; j++) {
+                    newRow = newRow.concat(methods.getRow(matRow[j],i).valueOf());
+                }
+                mTensor.push(newRow);
             }
         });
         return math.matrix(mTensor);
@@ -143,9 +145,9 @@ const methods = {
      * @return {Matrix | Array} R
      */
     genShortMatrix: function(rows,cols,dist) {
-        matrix = [];
+        let matrix = [];
         for (let i=0; i<rows; i++) {
-            row = [];
+            let row = [];
             for (let j=0; j<cols; j++) {
                 row.push(dist.sample);
             }
@@ -153,5 +155,5 @@ const methods = {
         }
         return math.matrix(matrix);
     }
-}
+};
 module.exports = methods;

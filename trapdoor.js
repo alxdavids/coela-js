@@ -1,7 +1,10 @@
 /**
  * Trapdoor javascript file for instantiating different sampling methods
+ * 
  */
 
+/*jshint esversion: 6 */
+/*jshint node: true */
 'use strict';
 const rye = require('rye');
 const math = require('mathjs');
@@ -24,8 +27,8 @@ class TrapSampler {
         this.g = tsUtils.getGadgetVector(this.l);
         this.G = tsUtils.getGadget(this.g, this.n);
         this.zMap = tsUtils.createBuckets(this.q, this.l, this.g, this.dist, null);
-        this.elen = this.m + this.n * this.l
-        this.trapWidth = this.n * this.l
+        this.elen = this.m + this.n * this.l;
+        this.trapWidth = this.n * this.l;
     }
 
     /**
@@ -41,7 +44,7 @@ class TrapSampler {
         let AA = matUtils.augment(A, A1);
         // RR \in \ZZ_q^{(elen) x trapWidth}
         let RR = matUtils.stack(R, IR);
-        return [AA, RR]
+        return [AA, RR];
     }
 
     /**
@@ -114,8 +117,6 @@ class TrapSampler {
                 console.log("There are no samples left for: ", + element);
                 self.zMap = tsUtils.createBuckets(self.q, self.l, self.g, self.dist, self.zMap);
                 throw new Error("New z values sampled, please retry.");
-                // Not sure if this ever gets ran?
-                return null;
             }
         });
         return matUtils.wrapVector(z);
@@ -130,9 +131,3 @@ class DiscreteGaussian {
         return math.round(this.dist.ppf(math.random()));
     }
 }
-
-let poly = new Polynomial([1,-8,7,3,1,0,0,-4],2);
-let poly2 = new Polynomial([-4,3,2,1],2);
-let newPoly = poly.add(poly2);
-console.log(newPoly);
-console.log(newPoly.applyQuotient());
