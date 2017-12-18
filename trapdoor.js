@@ -13,7 +13,7 @@ const sjcl = require('sjcl');
 const tsUtils = require('./trapSamplerUtils.js');
 const matUtils = require('./matUtils.js');
 const ringUtils = require('./ringUtils.js');
-const Polynomial = require('./poly.js');
+// const Polynomial = require('./poly.js');
 const PrimeField = rye.PrimeField;
 
 class TrapSampler {
