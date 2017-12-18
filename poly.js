@@ -1,6 +1,9 @@
 /**
  * Single-variate polynomial
  */
+
+/*jshint esversion: 6 */
+/*jshint node: true */
 'use strict';
 const math = require('mathjs');
 const sprintf = require('sprintf');
@@ -41,7 +44,7 @@ class Polynomial {
         let first = 0;
         self.poly.forEach(function(coeff, index) {
             if (coeff != 0) {
-                let sign = (coeff > 0 ? "+" : "-")
+                let sign = (coeff > 0 ? "+" : "-");
                 let val = math.abs(coeff);
                 if (val == 1) {
                     // Bad types I know...
@@ -208,7 +211,7 @@ module.exports = Polynomial;
 
 function getDegree(arr) {
     if (!arr) {
-        return 0
+        return 0;
     }
     let deg = arr.length-1;
     for (let i=arr.length-1; i>=0; i--) {
