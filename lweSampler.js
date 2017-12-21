@@ -17,16 +17,45 @@ class LWESampler {
 
 	/**
 	 * Samples an LWE instance with a short secret
-	 * @param  {Matrix | Array} A [Uniform matrix]
+	 * @param {Matrix | Array} A [Uniform matrix]
 	 * @return {Matrix | Array literal} [LWE sample]
 	 */
-	sampleShortLWE(A) {
+	shortSecretLWE(A) {
 		let ts = this.ts;
 		let S = matUtils.genShortMatrix(ts.elen,ts.n,ts.dist);
-		let E = matUtils.genShortMatrix(ts.n,ts.n,ts.dist);
-		let AS = math.multiply(A,S);
-		let B = math.mod(math.add(AS,E), ts.q);
+		let B = this.getLWEMatrix(A,S);
 		return {A: A, B: B};
+	}
+
+	/**
+	 * Samples an LWE sample with respect to a specific secret
+	 * @param {Matrix | Array} A 
+	 * @param {Matrix | Array} S 
+	 * @returns {Matrix | Array literal}
+	 */
+	specificSecretLWE(A,S) {
+		let ts = this.ts;
+		let rowsS = matUtils.rowSize(S);
+		let colsS = matUtils.colSize(S);
+		if (rowsS != ts.elen || colsS != ts.n) {
+			throw new Error("Specified matrix S: " + S + " does not have correct dimensions, rows: " + rowsS + "; cols: " + colsS);
+		}
+		let B = this.getLWEMatrix(A,S);
+		return {A: A, B: B};
+	}
+
+	/**
+	 * Computes AS+E for a randomly sampled error E
+	 * @param {Matrix | Array} A 
+	 * @param {Matrix | Array} S
+	 * @returns {Matrix | Array literal}
+	 */
+	getLWEMatrix(A,S) {
+		let ts = this.ts;
+		let E = matUtils.genShortMatrix(ts.n, ts.n, ts.dist);
+		let AS = math.multiply(A, S);
+		let B = math.mod(math.add(AS, E), ts.q);
+		return B;
 	}
 }
 

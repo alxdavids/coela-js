@@ -46,7 +46,7 @@ class TrapSampler {
         let AA = matUtils.augment(A, A1);
         // RR \in \ZZ_q^{(elen) x trapWidth}
         let RR = matUtils.stack(R, IR);
-        return [AA, RR];
+        return {AA: AA, trap: RR};
     }
 
     /**
