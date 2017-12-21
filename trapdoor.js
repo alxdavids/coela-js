@@ -92,7 +92,7 @@ class TrapSampler {
             console.error(error);
             return null;
         }
-        // x = (p + RR*z) mod q 
+        // x = (p + RR*z) mod q
         let x = math.mod(math.add(p, math.multiply(RR, z)), this.q);
         // res = (AA*x) mod q
         let res = math.mod(math.multiply(AA, x), this.q);
@@ -113,21 +113,25 @@ class TrapSampler {
         let z = [];
         let vArr = v.valueOf();
         let self = this;
+        let retry;
         vArr.forEach(function (element) {
             let samps = self.zMap[element];
-            if (matUtils.colSize(samps) != 0) {
+            if (samps !== undefined && matUtils.colSize(samps) != 0) {
                 z = z.concat(samps.pop().valueOf());
             } else {
                 console.log("There are no samples left for: ", + element);
                 if (i < MAX_RETRIES){
                     console.log("Sampling new elements and retrying");
                     self.zMap = tsUtils.createBuckets(self.q, self.l, self.g, self.dist, self.zMap);
-                    self.zPreImg(v,i+1);
+                    retry = self.zPreImg(v,i+1);
                 } else {
                     throw new Error("Maximum number of retries reached for samples.");
                 }
             }
         });
+        if (retry) {
+            return retry;
+        }
         return matUtils.wrapVector(z);
     }
 

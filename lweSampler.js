@@ -38,7 +38,7 @@ class LWESampler {
 		let rowsS = matUtils.rowSize(S);
 		let colsS = matUtils.colSize(S);
 		if (rowsS != ts.elen || colsS != ts.n) {
-			throw new Error("Specified matrix S: " + S + " does not have correct dimensions, rows: " + rowsS + "; cols: " + colsS);
+			throw new Error("Specified matrix S: " + S + " does not have correct dimensions, rows: " + rowsS + "; cols: " + colsS + ".");
 		}
 		let B = this.getLWEMatrix(A,S);
 		return {A: A, B: B};

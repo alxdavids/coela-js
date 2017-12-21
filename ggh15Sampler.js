@@ -79,7 +79,7 @@ class GGH15Sampler {
 			for (let j=0;j<kappa-1;j++) {
 				let matsSource = nodes[i][j];
 				let matsSink = nodes[i][j+1];
-				let res = this.computePaths(matsSource, matsSink, width);
+                let res = this.computePaths(matsSource, matsSink, width);
 				encodings[i][j] = res.encs;
 				values[i][j] = res.vals;
 			}
@@ -120,11 +120,11 @@ class GGH15Sampler {
 	 * @returns {Matrix | Array literal}
 	 */
 	computePaths(matsSource, matsSink, width) {
-		let ts = this.ts
+		let ts = this.ts;
 		let encs = [];
 		let vals = [];
 		for (let w = 0; w < width; w++) {
-			let S = matUtils.genShortMatrix(ts.n, ts.n, ts.dist);
+			let S = matUtils.genShortMatrix(ts.elen, ts.n, ts.dist);
 			let encS = this.generateEncoding(matsSource.AA, matsSource.trap, matsSink.AA, S);
 			encs[w] = encS;
 			vals[w] = S;
