@@ -1,5 +1,5 @@
 /**
- * Trapdoor javascript file for instantiating different sampling methods
+ * Lattice trapdoor sampler
  * 
  */
 
@@ -38,7 +38,7 @@ class TrapSampler {
     genMatrixWithTrapdoor() {
         let A = math.mod(math.randomInt([this.n, this.m], this.q), this.q);
         let R = matUtils.genShortMatrix(this.m, this.trapWidth, this.dist);
-        let A1 = tsUtils.balance(math.subtract(this.G, math.multiply(A, R)), this.q);
+        let A1 = tsUtils.matBalance(math.subtract(this.G, math.multiply(A, R)), this.q);
         let IR = math.eye(this.trapWidth);
         // AA \in \ZZ_q^{n x (elen)}
         let AA = matUtils.augment(A, A1);
@@ -48,20 +48,22 @@ class TrapSampler {
     }
 
     /**
-     * * Return a pre-image matrix X such that AA*X = U mod q for a vector U
+     * * Return a pre-image matrix X such that AA*X = U mod q for a matrix U
      * @param {Matrix | Array} AA 
      * @param {Matrix | Array} RR 
      * @param {Matrix | Array} U 
      */
     matPreImage(AA, RR, U) {
         let X = [];
-        for (let i = 0; i < matUtils.rowSize(U); i++) {
+        let rowsU = matUtils.rowSize(U);
+        let colsU = matUtils.colSize(U);
+        for (let i=0;i<rowsU;i++) {
             let x = this.vecPreImage(AA, RR, matUtils.getRow(U, i));
             X.push(x);
         }
         let matX = math.transpose(tsUtils.matBalance(math.matrix(X), this.q));
-        if (!math.equal(math.mod(math.multiply(AA, matX), this.q), U)) {
-            throw new Error("Matrices do not equal after pre-image computation AA*X:" + math.mod(math.multiply(AA, matX), this.q).valueOf() + ", U:" + U.valueOf());
+        if (!this.checkMatrixPreImage(AA,matX,U,rowsU,colsU)) {
+            throw new Error("Matrices do not equal after pre-image computation AA*X:" + math.mod(math.multiply(AA, X), this.q).valueOf() + ", U:" + U.valueOf());
         }
         return matX;
     }
@@ -121,6 +123,29 @@ class TrapSampler {
         });
         return matUtils.wrapVector(z);
     }
+
+    /**
+     * Checks that the result of the matrix pre-image 
+     * computation is correct
+     * @param {Matrix | Array} AA
+     * @param {Matrix | Array} X
+     * @param {Matrix | Array} U
+     * @param {Integer} rowsU
+     * @param {Integer} colsU
+     * @return {Boolean}
+     */
+    checkMatrixPreImage(AA,X,U,rowsU,colsU) {
+        for (let i=0;i<rowsU;i++) {
+            for (let j=0;j<colsU;j++) {
+                let ax = math.subset(math.mod(math.multiply(AA, X), this.q), math.index(j,i));
+                let u = math.subset(math.transpose(U), math.index(j,i));
+                if (!math.equal(ax, u)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
 
 class DiscreteGaussian {
@@ -131,3 +156,5 @@ class DiscreteGaussian {
         return math.round(this.dist.ppf(math.random()));
     }
 }
+
+module.exports = TrapSampler;
