@@ -16,6 +16,8 @@ const ringUtils = require('./ringUtils.js');
 // const Polynomial = require('./poly.js');
 const PrimeField = rye.PrimeField;
 
+const MAX_RETRIES = 3;
+
 class TrapSampler {
     constructor(q, n, m, sigma) {
         this.q = q;
@@ -85,7 +87,7 @@ class TrapSampler {
         let v = (math.mod(math.subtract(u, math.multiply(AA, p)), this.q));
         let z = null;
         try {
-            z = this.zPreImg(v);
+            z = this.zPreImg(v,0);
         } catch (error) {
             console.error(error);
             return null;
@@ -107,7 +109,7 @@ class TrapSampler {
      * @param {Vector (mod q)} v
      * @return {Vector} z 
      */
-    zPreImg(v) {
+    zPreImg(v,i) {
         let z = [];
         let vArr = v.valueOf();
         let self = this;
@@ -117,8 +119,13 @@ class TrapSampler {
                 z = z.concat(samps.pop().valueOf());
             } else {
                 console.log("There are no samples left for: ", + element);
-                self.zMap = tsUtils.createBuckets(self.q, self.l, self.g, self.dist, self.zMap);
-                throw new Error("New z values sampled, please retry.");
+                if (i < MAX_RETRIES){
+                    console.log("Sampling new elements and retrying");
+                    self.zMap = tsUtils.createBuckets(self.q, self.l, self.g, self.dist, self.zMap);
+                    self.zPreImg(v,i+1);
+                } else {
+                    throw new Error("Maximum number of retries reached for samples.");
+                }
             }
         });
         return matUtils.wrapVector(z);
