@@ -124,7 +124,7 @@ class GGH15Sampler {
 		let encs = [];
 		let vals = [];
 		for (let w = 0; w < width; w++) {
-			let S = matUtils.genShortMatrix(ts.elen, ts.n, ts.dist);
+			let S = matUtils.genShortMatrix(ts.elen, ts.elen, ts.dist);
 			let encS = this.generateEncoding(matsSource.AA, matsSource.trap, matsSink.AA, S);
 			encs[w] = encS;
 			vals[w] = S;

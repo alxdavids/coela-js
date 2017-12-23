@@ -6,6 +6,7 @@
 /*jshint esversion: 6 */
 /*jshint node: true */
 const TrapSampler = require('./trapdoor.js');
+const tsUtils = require("./trapSamplerUtils.js");
 const LWESampler = require('./lweSampler.js');
 const GGH15Sampler = require('./ggh15Sampler.js');
 const matUtils = require('./matUtils.js');
@@ -18,7 +19,7 @@ class TrapdoorExample {
 
 	generate() {
 		let mats = this.ts.genMatrixWithTrapdoor();
-		let U = math.matrix(math.round(math.multiply(math.random([this.ts.n, this.ts.n]),10)));
+		let U = math.matrix(math.round(math.multiply(math.random([this.ts.n, this.ts.elen]),10)));
 		let preImg = this.ts.matPreImage(mats.AA,mats.trap,U);
 
 		return {mats: mats, U: U, preImg: preImg};
@@ -76,14 +77,20 @@ class GGH15Example {
 	}
 
 	check(res,branches,width) {
-
+		let encodings = res.encodings.encs[0];
+		let mult = encodings[0][0];
+		for (let i=1;i<encodings.length;i++) {
+			mult = math.multiply(mult,encodings[i][0]);
+		}
+		console.log(mult);
+		console.log(tsUtils.matBalance(mult,q));
 	}
 }
 
 let q = 143;
 let n = 4;
 let m = 3; 
-let sigma = 2.0;
+let sigma = 1.0;
 
 let trap = new TrapdoorExample(q, n, m, sigma);
 let resTrap = trap.generate();
@@ -102,11 +109,15 @@ for (let branches=1;branches<3;branches++) {
 	for (let width=1;width<3;width++) {
 		let ggh15NoBookends = new GGH15Example(q, n, m, sigma, kappa, branches, false);
 		let resGGH15NoBookends = ggh15NoBookends.generate(width);
-		console.log(resGGH15NoBookends);
 
 		let ggh15Bookends = new GGH15Example(q, n, m, sigma, kappa, branches, true);
 		let resGGH15Bookends = ggh15Bookends.generate(width);
-		console.log(resGGH15Bookends);
 	}
 }
+
+let ggh15 = new GGH15Example(q, n, m, sigma, kappa, 1, false);
+let resGGH15 = ggh15.generate(1);
+ggh15.check(resGGH15,1,1);
+
+
 

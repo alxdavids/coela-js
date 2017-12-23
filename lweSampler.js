@@ -22,7 +22,7 @@ class LWESampler {
 	 */
 	shortSecretLWE(A) {
 		let ts = this.ts;
-		let S = matUtils.genShortMatrix(ts.elen,ts.n,ts.dist);
+		let S = matUtils.genShortMatrix(ts.elen,ts.elen,ts.dist);
 		let B = this.getLWEMatrix(A,S);
 		return {A: A, B: B};
 	}
@@ -37,7 +37,7 @@ class LWESampler {
 		let ts = this.ts;
 		let rowsS = matUtils.rowSize(S);
 		let colsS = matUtils.colSize(S);
-		if (rowsS != ts.elen || colsS != ts.n) {
+		if (rowsS != ts.elen || colsS != ts.elen) {
 			throw new Error("Specified matrix S: " + S + " does not have correct dimensions, rows: " + rowsS + "; cols: " + colsS + ".");
 		}
 		let B = this.getLWEMatrix(A,S);
@@ -52,7 +52,7 @@ class LWESampler {
 	 */
 	getLWEMatrix(A,S) {
 		let ts = this.ts;
-		let E = matUtils.genShortMatrix(ts.n, ts.n, ts.dist);
+		let E = matUtils.genShortMatrix(ts.n, ts.elen, ts.dist);
 		let AS = math.multiply(A, S);
 		let B = math.mod(math.add(AS, E), ts.q);
 		return B;

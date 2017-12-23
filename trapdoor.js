@@ -59,13 +59,13 @@ class TrapSampler {
         let X = [];
         let rowsU = matUtils.rowSize(U);
         let colsU = matUtils.colSize(U);
-        for (let i=0;i<rowsU;i++) {
-            let x = this.vecPreImage(AA, RR, matUtils.getRow(U, i));
+        for (let i=0;i<colsU;i++) {
+            let x = this.vecPreImage(AA, RR, matUtils.getCol(U, i));
             X.push(x);
         }
         let matX = math.transpose(tsUtils.matBalance(math.matrix(X), this.q));
         if (!this.checkMatrixPreImage(AA,matX,U,rowsU,colsU)) {
-            throw new Error("Matrices do not equal after pre-image computation AA*X:" + math.mod(math.multiply(AA, X), this.q).valueOf() + ", U:" + U.valueOf());
+            throw new Error("Matrices do not equal after pre-image computation AA*X:" + math.mod(math.multiply(AA, matX), this.q).valueOf() + ", U:" + U.valueOf());
         }
         return matX;
     }
@@ -148,8 +148,8 @@ class TrapSampler {
     checkMatrixPreImage(AA,X,U,rowsU,colsU) {
         for (let i=0;i<rowsU;i++) {
             for (let j=0;j<colsU;j++) {
-                let ax = math.subset(math.mod(math.multiply(AA, X), this.q), math.index(j,i));
-                let u = math.subset(math.transpose(U), math.index(j,i));
+                let ax = math.subset(math.mod(math.multiply(AA, X), this.q), math.index(i,j));
+                let u = math.subset(U, math.index(i,j));
                 if (!math.equal(ax, u)) {
                     return false;
                 }
