@@ -78,46 +78,76 @@ class GGH15Example {
 
 	check(res,branches,width) {
 		let encodings = res.encodings.encs[0];
+		let nodes = res.nodes.nodes[0];
+		let values = res.encodings.values[0];
 		let mult = encodings[0][0];
+		let multVals = values[0][0];
 		for (let i=1;i<encodings.length;i++) {
 			mult = math.multiply(mult,encodings[i][0]);
+			multVals = math.multiply(multVals,values[i][0]);
 		}
-		console.log(mult);
-		console.log(tsUtils.matBalance(mult,q));
+
+		let AA = nodes[0].AA;
+		let AA2 = nodes[2].AA;
+		let zt = math.multiply(AA,mult);
+		let chk = math.multiply(multVals,AA2);
+		let result = tsUtils.matBalance(math.subtract(zt,chk),q);
+		let rows = matUtils.rowSize(result);
+		let cols = matUtils.colSize(result);
+		for (let i=0;i<rows;i++) {
+			for (let j=0;j<cols;j++) {
+				let entry = result.subset(math.index(i,j));
+				if (math.abs(entry) > q/8) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
 
-let q = 143;
+let q = 1019;
 let n = 4;
 let m = 3; 
 let sigma = 1.0;
+let doTrap = false;
+let doLWE = false;
+let doGGH15 = true;
 
-let trap = new TrapdoorExample(q, n, m, sigma);
-let resTrap = trap.generate();
-if (!trap.check(resTrap)) {
-	throw new Error("Matrix pre-image check for Trapdoor example failed.");
-}
-
-let lwe = new LWEExample(q, n, m, sigma);
-let resLWE = lwe.generate();
-if (!lwe.check(resLWE)) {
-	throw new Error("Matrix pre-image check for LWE example failed.");
-}
-
-let kappa = 3;
-for (let branches=1;branches<3;branches++) {
-	for (let width=1;width<3;width++) {
-		let ggh15NoBookends = new GGH15Example(q, n, m, sigma, kappa, branches, false);
-		let resGGH15NoBookends = ggh15NoBookends.generate(width);
-
-		let ggh15Bookends = new GGH15Example(q, n, m, sigma, kappa, branches, true);
-		let resGGH15Bookends = ggh15Bookends.generate(width);
+if (doTrap) {
+	let trap = new TrapdoorExample(q, n, m, sigma);
+	let resTrap = trap.generate();
+	if (!trap.check(resTrap)) {
+		throw new Error("Matrix pre-image check for Trapdoor example failed.");
 	}
 }
 
-let ggh15 = new GGH15Example(q, n, m, sigma, kappa, 1, false);
-let resGGH15 = ggh15.generate(1);
-ggh15.check(resGGH15,1,1);
+if (doLWE) {
+	let lwe = new LWEExample(q, n, m, sigma);
+	let resLWE = lwe.generate();
+	if (!lwe.check(resLWE)) {
+		throw new Error("Matrix pre-image check for LWE example failed.");
+	}
+}
+
+if (doGGH15) {
+	let kappa = 3;
+	// for (let branches=1;branches<3;branches++) {
+	// 	for (let width=1;width<3;width++) {
+	// 		let ggh15NoBookends = new GGH15Example(q, n, m, sigma, kappa, branches, false);
+	// 		let resGGH15NoBookends = ggh15NoBookends.generate(width);
+
+	// 		let ggh15Bookends = new GGH15Example(q, n, m, sigma, kappa, branches, true);
+	// 		let resGGH15Bookends = ggh15Bookends.generate(width);
+	// 	}
+	// }
+
+	let ggh15 = new GGH15Example(q, n, m, sigma, kappa, 1, false);
+	let resGGH15 = ggh15.generate(1);
+	if (!ggh15.check(resGGH15,1,1)) {
+		throw new Error("GGH15 check failed");
+	}
+}
 
 
 
