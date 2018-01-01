@@ -6,7 +6,7 @@
 /*jshint node: true */
 'use strict';
 const math = require('mathjs');
-const matUtils = require('./matUtils.js');
+const matUtils = require('./mat-utils.js');
 const utils = require('./utils.js');
 
 const methods = {

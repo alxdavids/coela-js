@@ -10,9 +10,9 @@ const rye = require('rye');
 const math = require('mathjs');
 const gaussian = require('gaussian');
 const sjcl = require('sjcl');
-const tsUtils = require('./trapSamplerUtils.js');
-const matUtils = require('./matUtils.js');
-const ringUtils = require('./ringUtils.js');
+const tsUtils = require('./trap-sampler-utils.js');
+const matUtils = require('./mat-utils.js');
+const ringUtils = require('./ring-utils.js');
 // const Polynomial = require('./poly.js');
 const PrimeField = rye.PrimeField;
 

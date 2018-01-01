@@ -2,6 +2,8 @@
  * Ring utility functions
  */
 
+/*jshint esversion: 6 */
+/*jshint node: true */
  'use strict';
 const rye = require("rye");
 const PolynomRing = rye.PolynomRing;

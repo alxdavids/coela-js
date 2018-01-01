@@ -6,9 +6,9 @@
 /*jshint esversion: 6 */
 /*jshint node: true */
 'use strict';
-const TrapSampler = require('./trapdoor.js');
-const LWESampler = require('./lweSampler.js');
-const matUtils = require('./matUtils.js');
+const TrapSampler = require('./trapdoor-sampler.js');
+const LWESampler = require('./lwe-sampler.js');
+const matUtils = require('./mat-utils.js');
 const math = require('mathjs');
 
 class GGH15Sampler {
