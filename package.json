@@ -15,14 +15,14 @@
   "license": "ISC",
   "homepage": "https://alxdavids.xyz",
   "dependencies": {
-    "chai": "^4.1.2",
-    "eslint": "^4.7.0",
+    "chai": "^4.2.0",
+    "eslint": "^4.19.1",
     "gaussian": "^1.1.0",
-    "mathjs": "^3.16.3",
-    "mocha": "^3.5.3",
+    "mathjs": "^3.20.2",
+    "mocha": "^6.1.4",
     "rye": "0.0.3",
-    "sjcl": "^1.0.7",
+    "sjcl": "^1.0.8",
     "sprintf": "^0.1.5",
-    "sprintf-js": "^1.1.1"
+    "sprintf-js": "^1.1.2"
   }
 }

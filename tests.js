@@ -11,11 +11,17 @@ const LWESampler = require('./lwe-sampler.js');
 const GGH15Sampler = require('./ggh15-sampler.js');
 const matUtils = require('./mat-utils.js');
 const math = require('mathjs');
+const getParams = require('./param-select.js');
 const sprintf = require('sprintf-js').sprintf;
 
+math.config({
+	number: 'BigNumber',
+	precision: 25,
+});
+
 class TrapdoorExample {
-	constructor(q, n, m, sigma)	{
-		this.ts = new TrapSampler(q,n,m,sigma);
+	constructor(params)	{
+		this.ts = new TrapSampler(params);
 	}
 
 	generate() {
@@ -152,16 +158,19 @@ class GGH15Example {
 	}
 }
 
-let q = 2441;
-let n = 4;
-let m = 3; 
-let sigma = 1.0;
-let doTrap = false;
+let lambda = math.bignumber(5);
+let kappa = math.bignumber(4);
+let params = getParams(lambda,kappa);
+let q = params.q;
+let n = params.n;
+let m = params.m;
+let sigma = params.sigma;
+let doTrap = true;
 let doLWE = false;
-let doGGH15 = true;
+let doGGH15 = false;
 
 if (doTrap) {
-	let trap = new TrapdoorExample(q, n, m, sigma);
+	let trap = new TrapdoorExample(params);
 	let resTrap = trap.generate();
 	if (!trap.check(resTrap)) {
 		throw new Error("Matrix pre-image check for Trapdoor example failed.");
@@ -177,7 +186,6 @@ if (doLWE) {
 }
 
 if (doGGH15) {
-	let kappa = 2;
 	for (let branches=1;branches<3;branches++) {
 		for (let width=1;width<3;width++) {
 			let ggh15NoBookends = new GGH15Example(q, n, m, sigma, kappa, branches, false);

@@ -1,5 +1,5 @@
 /**
- * Lattice trapdoor sampler
+ * Lattice trapdoor sampler in JavaScript
  * 
  */
 
@@ -19,13 +19,13 @@ const PrimeField = rye.PrimeField;
 const MAX_RETRIES = 3;
 
 class TrapSampler {
-    constructor(q, n, m, sigma) {
-        this.q = q;
-        this.n = n;
-        this.m = m;
-        this.l = math.ceil(math.log(q, 2));
-        this.ZZq = new PrimeField(q);
-        this.dist = new DiscreteGaussian(0, sigma);
+    constructor(params) {
+        this.q = params.q;
+        this.n = params.n;
+        this.m = params.m;
+        this.l = math.ceil(math.log(this.q, math.bignumber(2)));
+        this.ZZq = new PrimeField(this.q);
+        this.dist = new DiscreteGaussian(0, params.sigma);
         this.g = tsUtils.getGadgetVector(this.l);
         this.G = tsUtils.getGadget(this.g, this.n);
         this.zMap = tsUtils.createBuckets(this.q, this.l, this.g, this.dist, null);
